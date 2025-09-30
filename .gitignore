@@ -1,0 +1,32 @@
+# Project directories to exclude
+langroid/
+myenv/
+venv/
+.venv/
+env/
+
+# Python caches and artifacts
+__pycache__/
+*.py[cod]
+
+# OS/editor files
+.DS_Store
+.vscode/
+.idea/
+
+# Logs
+logs/
+**/logs/
+*.log
+
+# Tool caches
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# Secrets and local config
+.env
+
+# Optional large datasets (uncomment to ignore)
+# mimic-iii-clinical-database-demo-1.4/
+

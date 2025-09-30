@@ -1,0 +1,11 @@
+heart_rate:
+  table: chartevents
+  itemids: [211, 220045]
+  unit: bpm
+  bounds: [0, 300]
+# Extend with other stats as needed, e.g.:
+# spo2:
+#   table: chartevents
+#   itemids: [646, 220277]
+#   unit: percent
+#   bounds: [0, 100]

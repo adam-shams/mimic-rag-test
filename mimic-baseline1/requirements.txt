@@ -1,0 +1,7 @@
+langroid[postgres]
+pandas
+numpy
+PyYAML
+psycopg2-binary
+python-dateutil
+python-dotenv
