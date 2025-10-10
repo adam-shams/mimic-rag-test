@@ -1,12 +1,15 @@
 import os
+import re
 from datetime import datetime
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Tuple
 
 from langroid.agent.special.sql.sql_chat_agent import (
     SQLChatAgent,
     SQLChatAgentConfig,
 )
 from langroid import Task
+from langroid.agent.chat_document import ChatDocument
+from sqlalchemy import text
 
 from .config import get_llm_config, get_mimic_dsn
 
@@ -16,17 +19,17 @@ LLM = get_llm_config()
 SQLCFG = SQLChatAgentConfig(
     database_uri=get_mimic_dsn(),
     llm=LLM,
-    schema_tools=True,
     system_message=(
         "You are a SQL assistant. Use ONLY the following tables to answer queries: "
         "chartevents, d_items, labevents, d_labitems, admissions, icustays. "
         "Never modify data. Always filter by provided subject_id and time window. "
         "For vitals from chartevents, return columns: charttime, valuenum, valueuom, itemid, error."
     ),
+    stream=False,
 )
 
 sql_agent = SQLChatAgent(SQLCFG)
-sql_task = Task(sql_agent)
+sql_task = Task(sql_agent, interactive=False, llm_delegate=True)
 
 
 def _rows_to_dicts(rows: Any) -> List[Dict[str, Any]]:
@@ -55,6 +58,72 @@ def _rows_to_dicts(rows: Any) -> List[Dict[str, Any]]:
     return out
 
 
+def _extract_sql(text: Optional[str]) -> str:
+    """Extract SQL statement from agent response text."""
+    if not text:
+        return ""
+    content = text.strip()
+
+    # Try to read query from JSON payload (tool call)
+    match = re.search(r'query"\s*:\s*"([^\"]+)"', content, flags=re.IGNORECASE)
+    if match:
+        sql = match.group(1)
+        try:
+            sql = bytes(sql, "utf-8").decode("unicode_escape")
+        except Exception:
+            pass
+        return sql.strip()
+
+    # Prefer fenced code blocks
+    if "```" in content:
+        parts = content.split("```")
+        if len(parts) >= 2:
+            for i in range(1, len(parts), 2):
+                header = parts[i - 1].lower()
+                code = parts[i].strip()
+                if code.lower().startswith("sql\n"):
+                    code = code.split("\n", 1)[1]
+                elif code.lower() == "sql":
+                    continue
+                if header.rstrip().endswith("sql"):
+                    return code.strip()
+            code = parts[1].strip()
+            if code.lower().startswith("sql\n"):
+                return code.split("\n", 1)[1].strip()
+            if code.lower() == "sql":
+                return ""
+            return code.strip()
+
+    # Otherwise grab from first SELECT onward
+    lower = content.lower()
+    sel_idx = lower.find("select ")
+    if sel_idx >= 0:
+        return content[sel_idx:].strip()
+    return ""
+
+
+def _extract_sql_from_history(history: List[ChatDocument]) -> str:
+    for doc in reversed(history):
+        sql = _extract_sql(getattr(doc, "content", ""))
+        if sql.lower().strip().startswith("select"):
+            return sql
+    return ""
+
+
+def _run_sql(sql: str, max_rows: int) -> List[Dict[str, Any]]:
+    if not sql.strip().lower().startswith("select"):
+        raise ValueError("Only SELECT queries are supported.")
+    engine = getattr(sql_agent, "engine", None)
+    if engine is None:
+        raise RuntimeError("SQL agent engine not initialized")
+    with engine.connect() as conn:
+        res = conn.execute(text(sql))
+        rows = res.fetchall()
+    if max_rows and len(rows) > max_rows:
+        rows = rows[:max_rows]
+    return _rows_to_dicts(rows)
+
+
 def nl_fetch_day(
     stat_name: str,
     itemids: List[int],
@@ -62,7 +131,7 @@ def nl_fetch_day(
     start_dt: str,
     end_dt: str,
     max_rows: int = 5000,
-) -> List[Dict[str, Any]]:
+) -> Tuple[List[Dict[str, Any]], str]:
     """
     NL→SQL mode using the agent; returns rows as list of dicts.
     """
@@ -75,16 +144,16 @@ def nl_fetch_day(
     ORDER BY charttime ASC, LIMIT {max_rows}.
     """
     resp = sql_task.run(nl)
-    # Best-effort: try to extract a table result directly via the agent
+    used_sql = _extract_sql(resp.content)
+    if not used_sql:
+        used_sql = _extract_sql_from_history(sql_agent.message_history)
+    if not used_sql:
+        raise RuntimeError("SQL agent did not produce a query")
     try:
-        rows = sql_agent.run_query(resp.content)
-    except Exception:
-        # If content isn't SQL, try to extract code fence with SQL
-        content = resp.content or ""
-        sql_start = content.lower().find("select ")
-        sql = content[sql_start:] if sql_start >= 0 else ""
-        rows = sql_agent.run_query(sql)
-    return _rows_to_dicts(rows)
+        rows = _run_sql(used_sql, max_rows)
+    finally:
+        sql_agent.clear_history()
+    return rows, used_sql
 
 
 def sql_fetch_day(
