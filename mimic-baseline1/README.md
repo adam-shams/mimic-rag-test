@@ -23,6 +23,7 @@ Run (natural language question)
 - Ask a question such as:
   - `python -m mimic-baseline1.src.run_question "How is 10011 doing on 2126-08-20?"`
 - The SQL Chat agent (Langroid) turns the question into SQL, rows are summarized by the LLM, and the executed SQL is printed for transparency.
+- To bypass the Python feature computation and let the LLM work directly from raw SQL rows, add `--direct-from-sql` (or set `SUMMARIZE_FROM_SQL=1`). You can limit the number of rows sent to the LLM with `SUMMARIZE_ROWS_LIMIT` (default 1000).
 
 Folder Layout
 - conf/db.env                 # optional .env with MIMIC_DSN
