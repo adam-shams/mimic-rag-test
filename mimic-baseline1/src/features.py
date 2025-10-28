@@ -242,7 +242,15 @@ def compute_daily_features(
     rob_ts = clean["charttime"].to_numpy()[rob_out_idx]
 
     outlier_ts = list(df["charttime"].iloc[bounds_outliers_idx].to_list()) + list(rob_ts)
-    outlier_ts_iso = [ts.isoformat() for ts in outlier_ts[:5]]
+    outlier_ts_iso: List[str] = []
+    for ts in outlier_ts[:5]:
+        try:
+            ts_dt = pd.to_datetime(ts)
+            if pd.isna(ts_dt):
+                continue
+            outlier_ts_iso.append(ts_dt.to_pydatetime().isoformat())
+        except Exception:
+            outlier_ts_iso.append(str(ts))
 
     # Sparse flag: few observations or low coverage
     sparse = bool((n_obs < 6) or (hours_w_obs <= 3) or (prop_day < 0.1))

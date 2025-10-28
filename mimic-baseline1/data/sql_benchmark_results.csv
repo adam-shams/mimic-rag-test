@@ -1,10 +1,382 @@
 subject_id,day,stat_key,baseline_rows,agent_rows,row_recall,row_precision,missing_rows,extra_rows,status,failures,used_sql,delta_range.min,in_tol_range.min,delta_range.max,in_tol_range.max,delta_central.mean,in_tol_central.mean,delta_central.median,in_tol_central.median,delta_percentiles.p05,in_tol_percentiles.p05,delta_percentiles.p95,in_tol_percentiles.p95,delta_trend.delta_last_first,in_tol_trend.delta_last_first,delta_trend.slope_per_hr,in_tol_trend.slope_per_hr,delta_variability.std,in_tol_variability.std,delta_variability.mad,in_tol_variability.mad,delta_coverage.prop_day,in_tol_coverage.prop_day,delta_coverage.n_obs,in_tol_coverage.n_obs,delta_coverage.hours_w_obs,in_tol_coverage.hours_w_obs,delta_coverage.minutes_w_obs,in_tol_coverage.minutes_w_obs,flags_match_flags.unit_conflicts,flags_match_flags.sparse,flags_match_flags.value_out_of_bounds,flags_match_flags.no_data,flags_match_flags.duplicates
-10011,2126-08-20,heart_rate,27,27,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error 
+41976,2198-10-29,heart_rate,19,19,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error FROM chartevents
+WHERE subject_id = 41976
+  AND charttime >= '2198-10-29 00:00:00'
+  AND charttime <= '2198-10-29 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+10126,2171-07-12,heart_rate,13,13,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 10126
+  AND charttime BETWEEN '2171-07-12 00:00:00' AND '2171-07-12 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+44212,2123-11-24,heart_rate,13,13,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 44212
+  AND charttime BETWEEN '2123-11-24 00:00:00' AND '2123-11-24 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+42367,2147-10-03,heart_rate,12,12,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 42367
+  AND charttime BETWEEN '2147-10-03 00:00:00' AND '2147-10-03 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+40310,2144-07-13,heart_rate,42,42,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error FROM chartevents
+WHERE subject_id = 40310 
+  AND charttime BETWEEN '2144-07-13 00:00:00' AND '2144-07-13 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+10061,2107-01-16,heart_rate,15,15,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 10061
+  AND charttime >= '2107-01-16 00:00:00'
+  AND charttime <= '2107-01-16 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+10124,2192-03-29,heart_rate,25,25,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 10124
+  AND charttime BETWEEN '2192-03-29 00:00:00' AND '2192-03-29 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+10127,2198-06-28,heart_rate,27,27,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 10127
+  AND charttime BETWEEN '2198-06-28 00:00:00' AND '2198-06-28 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+42135,2127-07-29,heart_rate,16,16,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error FROM chartevents WHERE subject_id = 42135 AND charttime BETWEEN '2127-07-29 00:00:00' AND '2127-07-29 24:00:00' AND itemid IN (211, 220045) AND valuenum IS NOT NULL AND (error IS NULL OR error = 0) ORDER BY charttime ASC LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+42281,2119-10-17,heart_rate,21,21,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 42281
+  AND charttime BETWEEN '2119-10-17 00:00:00' AND '2119-10-17 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+42075,2166-02-12,heart_rate,12,12,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 42075
+  AND charttime BETWEEN '2166-02-12 00:00:00' AND '2166-02-12 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+10069,2188-02-12,heart_rate,3,3,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 10069
+  AND charttime BETWEEN '2188-02-12 00:00:00' AND '2188-02-12 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+41914,2145-12-01,heart_rate,7,7,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 41914
+  AND charttime BETWEEN '2145-12-01 00:00:00' AND '2145-12-01 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+10011,2126-08-14,heart_rate,3,3,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 10011
+  AND charttime >= '2126-08-14 00:00:00'
+  AND charttime <= '2126-08-14 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+41795,2145-07-07,heart_rate,25,25,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error FROM chartevents WHERE subject_id = 41795 AND charttime BETWEEN '2145-07-07 00:00:00' AND '2145-07-07 24:00:00' AND itemid IN (211, 220045) AND valuenum IS NOT NULL AND (error IS NULL OR error = 0) ORDER BY charttime ASC LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+40595,2144-10-15,heart_rate,37,37,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error FROM chartevents WHERE subject_id = 40595 AND charttime BETWEEN '2144-10-15 00:00:00' AND '2144-10-15 24:00:00' AND itemid IN (211, 220045) AND valuenum IS NOT NULL AND (error IS NULL OR error = 0) ORDER BY charttime ASC LIMIT 5000",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+10119,2117-08-05,heart_rate,7,7,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 10119
+  AND charttime >= '2117-08-05 00:00:00'
+  AND charttime <= '2117-08-05 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+10059,2150-08-07,heart_rate,3,3,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 10059
+  AND charttime >= '2150-08-07 00:00:00'
+  AND charttime <= '2150-08-07 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+10111,2180-01-21,heart_rate,8,8,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error 
 FROM chartevents 
-WHERE subject_id = 10011 
-  AND charttime BETWEEN '2126-08-20 00:00:00' AND '2126-08-20 24:00:00' 
+WHERE subject_id = 10111
+  AND charttime BETWEEN '2180-01-21 00:00:00' AND '2180-01-21 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+10045,2129-11-24,heart_rate,6,6,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 10045
+  AND charttime BETWEEN '2129-11-24 00:00:00' AND '2129-11-24 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+10042,2147-02-06,heart_rate,13,13,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 10042
+  AND charttime BETWEEN '2147-02-06 00:00:00' AND '2147-02-06 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+10027,2190-07-13,heart_rate,26,26,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error FROM chartevents
+WHERE subject_id = 10027
+  AND charttime >= '2190-07-13 00:00:00'
+  AND charttime <= '2190-07-13 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+10094,2180-02-29,heart_rate,4,4,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error FROM chartevents WHERE subject_id=10094 AND charttime >= '2180-02-29 00:00:00' AND charttime <= '2180-02-29 24:00:00' AND itemid IN (211, 220045) AND valuenum IS NOT NULL AND (error IS NULL OR error = 0) ORDER BY charttime ASC LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+10076,2107-03-24,heart_rate,30,30,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error FROM chartevents WHERE subject_id = 10076 AND charttime BETWEEN '2107-03-24 00:00:00' AND '2107-03-24 24:00:00' AND itemid IN (211, 220045) AND valuenum IS NOT NULL AND (error IS NULL OR error = 0) ORDER BY charttime ASC LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+10088,2107-01-05,heart_rate,46,46,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 10088
+  AND charttime BETWEEN '2107-01-05 00:00:00' AND '2107-01-05 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+44083,2112-05-04,heart_rate,6,6,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 44083
+  AND charttime >= '2112-05-04 00:00:00' 
+  AND charttime <= '2112-05-04 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+43798,2198-06-29,heart_rate,19,19,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 43798
+  AND charttime BETWEEN '2198-06-29 00:00:00' AND '2198-06-29 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+40124,2130-02-04,heart_rate,21,21,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 40124
+  AND charttime >= '2130-02-04 00:00:00'
+  AND charttime <= '2130-02-04 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+10044,2152-10-03,heart_rate,24,24,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error FROM chartevents WHERE subject_id = 10044 AND charttime BETWEEN '2152-10-03 00:00:00' AND '2152-10-03 24:00:00' AND itemid IN (211, 220045) AND valuenum IS NOT NULL AND (error IS NULL OR error = 0) ORDER BY charttime ASC LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+42066,2112-02-04,heart_rate,10,10,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error FROM chartevents WHERE subject_id = 42066 AND charttime BETWEEN '2112-02-04 00:00:00' AND '2112-02-04 24:00:00' AND itemid IN (211, 220045) AND valuenum IS NOT NULL AND (error IS NULL OR error = 0) ORDER BY charttime ASC LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+42199,2117-03-23,heart_rate,13,13,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error FROM chartevents WHERE subject_id = 42199 AND charttime >= '2117-03-23 00:00:00' AND charttime <= '2117-03-23 24:00:00' AND itemid IN (211, 220045) AND valuenum IS NOT NULL AND (error IS NULL OR error = 0) ORDER BY charttime ASC LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+10112,2148-01-13,heart_rate,2,2,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 10112
+  AND charttime BETWEEN '2148-01-13 00:00:00' AND '2148-01-13 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+43748,2179-04-17,heart_rate,11,11,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id=43748
+  AND charttime BETWEEN '2179-04-17 00:00:00' AND '2179-04-17 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+44228,2170-12-15,heart_rate,28,28,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 44228
+  AND charttime >= '2170-12-15 00:00:00'
+  AND charttime <= '2170-12-15 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+43746,2111-01-07,heart_rate,8,8,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 43746
+  AND charttime >= '2111-01-07 00:00:00'
+  AND charttime <= '2111-01-07 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+10032,2138-04-08,heart_rate,32,32,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error FROM chartevents WHERE subject_id = 10032 AND charttime BETWEEN '2138-04-08 00:00:00' AND '2138-04-08 24:00:00' AND itemid IN (211, 220045) AND valuenum IS NOT NULL AND (error IS NULL OR error = 0) ORDER BY charttime ASC LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+10117,2138-06-05,heart_rate,3,3,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 10117
+  AND charttime BETWEEN '2138-06-05 00:00:00' AND '2138-06-05 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error=0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+43881,2104-09-24,heart_rate,5,5,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error 
+FROM chartevents 
+WHERE subject_id = 43881 
+  AND charttime BETWEEN '2104-09-24 00:00:00' AND '2104-09-24 24:00:00'
   AND itemid IN (211, 220045) 
   AND valuenum IS NOT NULL 
   AND (error IS NULL OR error = 0) 
 ORDER BY charttime ASC 
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+40612,2159-11-17,heart_rate,21,21,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error FROM chartevents
+WHERE subject_id = 40612
+  AND charttime >= '2159-11-17 00:00:00'
+  AND charttime <= '2159-11-17 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+10114,2171-10-30,heart_rate,7,7,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 10114
+  AND charttime >= '2171-10-30 00:00:00'
+  AND charttime <= '2171-10-30 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+43735,2128-11-04,heart_rate,8,8,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 43735
+  AND charttime BETWEEN '2128-11-04 00:00:00' AND '2128-11-04 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+10013,2125-10-04,heart_rate,8,8,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 10013
+  AND charttime >= '2125-10-04 00:00:00'
+  AND charttime <= '2125-10-04 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+10083,2192-11-20,heart_rate,21,21,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 10083
+  AND charttime BETWEEN '2192-11-20 00:00:00' AND '2192-11-20 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+10029,2139-09-23,heart_rate,33,33,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error FROM chartevents
+WHERE subject_id = 10029
+  AND charttime BETWEEN '2139-09-23 00:00:00' AND '2139-09-23 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+42430,2142-11-26,heart_rate,3,3,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 42430
+  AND charttime BETWEEN '2142-11-26 00:00:00' AND '2142-11-26 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+10026,2195-05-17,heart_rate,25,25,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 10026
+  AND itemid IN (211, 220045)
+  AND charttime >= '2195-05-17 00:00:00' AND charttime <= '2195-05-17 24:00:00'
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+10040,2147-02-23,heart_rate,28,28,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 10040
+  AND charttime >= '2147-02-23 00:00:00'
+  AND charttime <= '2147-02-23 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+10038,2144-02-11,heart_rate,13,13,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error FROM chartevents WHERE subject_id = 10038 AND charttime BETWEEN '2144-02-11 00:00:00' AND '2144-02-11 24:00:00' AND itemid IN (211, 220045) AND valuenum IS NOT NULL AND (error IS NULL OR error = 0) ORDER BY charttime ASC LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+10065,2189-09-08,heart_rate,18,18,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM chartevents
+WHERE subject_id = 10065
+  AND charttime >= '2189-09-08 00:00:00'
+  AND charttime <= '2189-09-08 24:00:00'
+  AND itemid IN (211, 220045)
+  AND valuenum IS NOT NULL
+  AND (error IS NULL OR error = 0)
+ORDER BY charttime ASC
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
+10102,2105-06-08,heart_rate,7,7,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error
+FROM   chartevents
+WHERE  subject_id = 10102
+  AND  charttime >= '2105-06-08 00:00:00'
+  AND  charttime <= '2105-06-08 24:00:00'
+  AND  itemid IN (211, 220045)
+  AND  valuenum IS NOT NULL
+  AND  (error IS NULL OR error = 0)
+ORDER BY charttime ASC
 LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True
