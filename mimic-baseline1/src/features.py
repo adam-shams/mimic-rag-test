@@ -119,7 +119,13 @@ def compute_daily_features(
         "percentiles": {"p05": None, "p95": None},
         "trend": {"slope_per_hr": 0.0, "delta_last_first": None},
         "variability": {"std": None, "mad": None},
-        "coverage": {"n_obs": 0, "prop_day": 0.0, "hours_w_obs": 0, "n_missing_slots": 24},
+        "coverage": {
+            "n_obs": 0,
+            "prop_day": 0.0,
+            "hours_w_obs": 0,
+            "minutes_w_obs": 0,
+            "n_missing_slots": 24,
+        },
         "outliers": {"n": 0, "timestamps": []},
         "flags": {
             "unit_conflicts": False,
@@ -127,6 +133,7 @@ def compute_daily_features(
             "value_out_of_bounds": False,
             "no_data": True,
             "duplicates": False,
+            "approximate": False,
         },
         "head_rows_csv": "",
         "tail_rows_csv": "",
@@ -159,7 +166,7 @@ def compute_daily_features(
     n_missing_slots = max(0, 24 - hours_w_obs)
     # unique minutes coverage
     minutes = df["charttime"].dt.floor("min").nunique()
-    prop_day = float(minutes / (24 * 60))
+    prop_day = float(min(1.0, hours_w_obs / 24.0))
 
     # Value sanity and initial bounds-based outliers
     low, high = cfg.bounds
@@ -185,6 +192,7 @@ def compute_daily_features(
         payload["coverage"]["prop_day"] = prop_day
         payload["coverage"]["hours_w_obs"] = hours_w_obs
         payload["coverage"]["n_missing_slots"] = n_missing_slots
+        payload["coverage"]["minutes_w_obs"] = int(minutes)
         # outliers are all observations (since none clean)
         payload["outliers"]["n"] = int(n_obs)
         payload["outliers"]["timestamps"] = [
@@ -257,6 +265,7 @@ def compute_daily_features(
             "n_obs": int(n_obs),
             "prop_day": prop_day,
             "hours_w_obs": hours_w_obs,
+            "minutes_w_obs": int(minutes),
             "n_missing_slots": n_missing_slots,
         },
         "outliers": {"n": int(len(outlier_ts)), "timestamps": outlier_ts_iso},
@@ -266,9 +275,9 @@ def compute_daily_features(
             "value_out_of_bounds": value_out_of_bounds,
             "no_data": False,
             "duplicates": bool(dup_flag),
+            "approximate": False,
         },
         "head_rows_csv": head_csv,
         "tail_rows_csv": tail_csv,
     }
     return payload
-

@@ -9,9 +9,9 @@ from langroid.language_models.openai_gpt import OpenAIGPTConfig, OpenAIChatModel
 
 def get_llm_config() -> OpenAIGPTConfig:
     return OpenAIGPTConfig(
-        #chat_model=OpenAIChatModel.GPT4o_MINI,
         chat_model=OpenAIChatModel.O3_MINI,
         temperature=0.0,
+        timeout=120,
     )
 
 

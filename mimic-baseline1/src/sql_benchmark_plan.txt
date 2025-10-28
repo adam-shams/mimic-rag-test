@@ -1,0 +1,28 @@
+Benchmark SQL agent vs deterministic baseline
+--------------------------------------------
+
+Inputs
+- Stats catalog: conf/stats.yaml
+- Benchmark cases: conf/sql_benchmark_cases.yaml
+  * Each entry supplies subject_id, day (YYYY-MM-DD), stat_key
+- Deterministic SQL: sql_fetch_day() in src/sql_agent.py
+- NL→SQL agent: nl_fetch_day() in src/sql_agent.py (requires OPENAI_API_KEY)
+
+Process
+1. For each case, run sql_fetch_day to collect baseline rows.
+2. Run nl_fetch_day to obtain the agent-generated query and rows.
+3. Compute feature payloads via compute_daily_features for both row sets.
+4. Compare row-level overlap, numeric metrics, and flags.
+5. Emit per-case results to a CSV for inspection.
+
+Script
+- src/benchmark_sql.py automates the workflow.
+- Outputs default to data/sql_benchmark_results.csv and sql_direct_results.txt.
+
+Run example
+    python -m mimic-baseline1.src.benchmark_sql \
+        --cases mimic-baseline1/conf/sql_benchmark_cases.yaml \
+        --stats-yaml mimic-baseline1/conf/stats.yaml \
+        --output mimic-baseline1/data/sql_benchmark_results.csv
+
+Tune with --max-rows or by editing the YAML cases.

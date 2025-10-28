@@ -1,0 +1,267 @@
+
+4o:
+
+SQL direct: The heart rate measurements for subject ID 10011 on 2126-08-20 show a range from a minimum of 51 bpm (at 2126-08-20 11:00:00) to a maximum of 74 bpm (at 2126-08-20 05:35:00). The mean heart rate is 59.5 bpm, while the median is 55 bpm. The data exhibits a slight downward trend with a delta of 1 bpm from the first recorded value (65 bpm) to the last (66 bpm), resulting in a slope of approximately 0.04 bpm per hour. The standard deviation is 6.5 bpm, indicating moderate variability in the heart rate readings.
+
+```json
+{
+  "stat": "heart_rate",
+  "units": "bpm",
+  "day": "2126-08-20",
+  "range": {
+    "min": 51,
+    "max": 74,
+    "t_min": "2126-08-20T11:00:00",
+    "t_max": "2126-08-20T05:35:00"
+  },
+  "central": {
+    "mean": 59.5,
+    "median": 55
+  },
+  "percentiles": {
+    "p05": 51,
+    "p95": 68
+  },
+  "trend": {
+    "delta_last_first": 1,
+    "slope_per_hr": 0.04
+  },
+  "variability": {
+    "std": 6.5,
+    "mad": 5.5
+  },
+  "coverage": {
+    "n_obs": 28,
+    "hours_w_obs": 24,
+    "prop_day": 1.0,
+    "n_missing_slots": 0
+  },
+  "outliers": {
+    "n": 0,
+    "timestamps": []
+  },
+  "flags": {
+    "unit_conflicts": false,
+    "sparse": false,
+    "value_out_of_bounds": false,
+    "no_data": false,
+    "duplicates": false,
+    "approximate": false
+  }
+}
+
+
+no sql direct: On August 20, 2126, the heart rate data showed a range from a minimum of 51.0 bpm to a maximum of 74.0 bpm, with a median of 57.5 bpm. The data indicates a slight downward trend with a slope of -0.55 bpm per hour. The variability is moderate, with a standard deviation of approximately 6.73 bpm and a mean absolute deviation of 6.0 bpm. There were no outliers detected, and the coverage of the data was low at 0.02, indicating sparse observations throughout the day.
+
+```json
+{
+  "stat": "heart_rate",
+  "units": "bpm",
+  "day": "2126-08-20",
+  "range": {
+    "min": 51.0,
+    "max": 74.0
+  },
+  "central": {
+    "median": 57.5
+  },
+  "percentiles": {
+    "P05": 51.0,
+    "P95": 70.65
+  },
+  "trend": {
+    "slope_per_hr": -0.5454545454545454
+  },
+  "variability": {
+    "std": 6.727475646290261,
+    "mad": 6.0
+  },
+  "coverage": 0.02,
+  "outliers": 0,
+  "flags": {
+    "unit_conflicts": false,
+    "sparse": true
+  }
+}
+```
+
+o1-mini:
+
+sql direct: The heart rate measurements for subject 10011 on 2126-08-20 included 28 observations with a mean of 59.75 bpm and a median of 57.5 bpm. The heart rate ranged from 51 bpm at 2126-08-20 11:00:00 to a maximum of 74 bpm at 2126-08-20 05:35:00. The data shows a slight increasing trend of 1 bpm over 24 hours, 
+corresponding to a slope of 0.04 bpm/hr. The standard deviation is 7.07 bpm with a median absolute deviation of 4.5 bpm.
+
+```json
+{
+  "stat": "heart_rate",
+  "units": "bpm",
+  "day": "2126-08-20",
+  "range": {
+    "min": 51,
+    "t_min": "2126-08-20 11:00:00",
+    "max": 74,
+    "t_max": "2126-08-20 05:35:00"
+  },
+  "central": {
+    "mean": 59.75,
+    "median": 57.5
+  },
+  "percentiles": {
+    "p05": 51,
+    "p95": 72.65
+  },
+  "trend": {
+    "delta_last_first": 1,
+    "slope_per_hr": 0.04
+  },
+  "variability": {
+    "std": 7.07,
+    "mad": 4.5
+  },
+  "coverage": {
+    "n_obs": 28,
+    "hours_w_obs": 25,
+    "prop_day": 0.0194,
+    "n_missing_slots": 0
+  },
+  "outliers": {
+    "n": 0,
+    "timestamps": []
+  },
+  "flags": {
+    "unit_conflicts": false,
+    "sparse": true,
+    "value_out_of_bounds": false,
+    "no_data": false,
+    "duplicates": false,
+    "approximate": false
+  }
+}
+
+
+no sql direct:On 2126-08-20, the heart rate ranged from 51.0 to 74.0 bpm, with a median of 57.5 bpm. The trend showed a slope of -0.5454545454545454 bpm per hour and a delta 
+of 1.0 bpm from the first to the last reading. Variability was measured with a standard deviation of 6.727475646290261 and a MAD of 6.0 bpm. Coverage was 0.02, 
+with no outliers detected.
+
+```json
+{
+  "stat": "heart_rate",
+  "units": "bpm",
+  "day": "2126-08-20",
+  "range": {
+    "min": 51.0,
+    "max": 74.0
+  },
+  "central": {
+    "median": 57.5
+  },
+  "percentiles": {
+    "P05": 51.0,
+    "P95": 70.65
+  },
+  "trend": {
+    "slope_per_hr": -0.5454545454545454,
+    "delta_last_first": 1.0
+  },
+  "variability": {
+    "std": 6.727475646290261,
+    "mad": 6.0
+  },
+  "coverage": 0.02,
+  "outliers": 0,
+  "flags": {
+    "UNIT_CONFLICTS": false,
+    "SPARSE": true
+  }
+}
+
+o3-mini:
+
+sql direct:The 28 valid observations have a heart rate range from 51 bpm (first seen at 2126-08-20 11:00:00) to 74 bpm (first seen at 2126-08-20 05:35:00), with a mean of 59.75 bpm and a median of 57.5 bpm. The 5th and 95th percentiles are 51 and approximately 70.65 bpm, respectively, while the trend shows a delta of 1 
+bpm over 24 hours (a slope of 0.04167 bpm per hour). The population standard deviation is about 6.73 bpm and the median absolute deviation is 6.0 bpm. Coverage has 28 observations in 25 distinct hour buckets with a minute bucket proportion of 0.0028 (resulting in −1 missing slots when computed as 24 minus 
+observed hours), and there are no value outliers; however, the sparse flag is true because the minute bucket proportion 0.0028 is below 0.1.
+
+{
+  "stat": 28,
+  "units": "bpm",
+  "day": "2126-08-20",
+  "range": {
+    "min": 51,
+    "max": 74,
+    "t_min": "2126-08-20 11:00:00",
+    "t_max": "2126-08-20 05:35:00"
+  },
+  "central": {
+    "mean": 59.75,
+    "median": 57.5
+  },
+  "percentiles": {
+    "p05": 51,
+    "p95": 70.65
+  },
+  "trend": {
+    "delta_last_first": 1,
+    "slope_per_hr": 0.04167
+  },
+  "variability": {
+    "std": 6.73,
+    "mad": 6.0
+  },
+  "coverage": {
+    "n_obs": 28,
+    "hours_w_obs": 25,
+    "prop_day": 0.00278,
+    "n_missing_slots": -1
+  },
+  "outliers": {
+    "n": 0,
+    "timestamps": []
+  },
+  "flags": {
+    "unit_conflicts": false,
+    "sparse": true,
+    "value_out_of_bounds": false,
+    "no_data": false,
+    "duplicates": false,
+    "approximate": false
+  }
+}
+
+
+no sql direct: The heart rate on 2126-08-20 spanned a range from 51.0 to 74.0 bpm with a median of 57.5 bpm, and the 5th and 95th percentiles were 51.0 and 70.65 bpm 
+respectively. The trend over the day indicated a decrease at a rate of -0.5454545454545454 bpm per hour with a delta of 1.0 bpm from the first to the last 
+reading. The data showed moderate variability with a standard deviation of 6.727475646290261 and a median absolute deviation of 6.0, albeit with a very low 
+coverage of 0.02 and no outliers observed. The observations also indicate no unit conflicts and the dataset is marked as sparse.
+
+{
+  "stat": "heart_rate",
+  "units": "bpm",
+  "day": "2126-08-20",
+  "range": {
+    "min": 51.0,
+    "max": 74.0
+  },
+  "central": {
+    "median": 57.5
+  },
+  "percentiles": {
+    "p05": 51.0,
+    "p95": 70.65
+  },
+  "trend": {
+    "slope_per_hr": -0.5454545454545454,
+    "delta_last_first": 1.0
+  },
+  "variability": {
+    "std": 6.727475646290261,
+    "mad": 6.0
+  },
+  "coverage": 0.02,
+  "outliers": 0,
+  "flags": {
+    "unit_conflicts": false,
+    "sparse": true
+  }
+}
+
+
+

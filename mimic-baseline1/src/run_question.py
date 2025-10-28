@@ -10,7 +10,7 @@ from typing import Dict, Any
 from .config import load_stat_config
 from .features import StatCfg, compute_daily_features
 from .sql_agent import nl_fetch_day
-from .summarize_langroid import summarize, summarize_from_rows
+from .summarize_langroid import summarize_from_rows
 from .eval_faithfulness import check_faithfulness
 
 
@@ -74,13 +74,6 @@ def interpret_question(question: str, stats: Dict[str, Any]) -> QuestionRequest:
     return QuestionRequest(subject_id=subject_id, day=day, stat_key=stat_key)
 
 
-def _env_truthy(name: str, default: bool = False) -> bool:
-    val = os.getenv(name)
-    if val is None:
-        return default
-    return val.strip().lower() in {"1", "true", "yes", "on"}
-
-
 def _env_int(name: str, default: int) -> int:
     val = os.getenv(name)
     if val is None or not val.strip():
@@ -95,7 +88,6 @@ def answer_question(
     question: str,
     stats_cfg: Dict[str, Any],
     max_rows: int = 5000,
-    direct_from_sql: bool = False,
 ) -> str:
     parsed = interpret_question(question, stats_cfg)
     stat_def = stats_cfg[parsed.stat_key]
@@ -110,21 +102,22 @@ def answer_question(
     start_dt, end_dt = _day_window(parsed.day)
     rows, used_sql = nl_fetch_day(parsed.stat_key, cfg.itemids, parsed.subject_id, start_dt, end_dt, max_rows)
 
-    if direct_from_sql:
-        rows_limit = _env_int("SUMMARIZE_ROWS_LIMIT", 1000)
-        content = summarize_from_rows(
-            rows,
-            stat=parsed.stat_key,
-            unit=cfg.unit,
-            day=parsed.day,
-            bounds=cfg.bounds,
-            subject_id=parsed.subject_id,
-            max_rows=rows_limit,
-        )
-    else:
-        payload = compute_daily_features(rows, cfg, parsed.day)
-        payload.setdefault("meta", {})["sql"] = used_sql
-        content = summarize(payload)
+    payload = compute_daily_features(rows, cfg, parsed.day)
+    payload.setdefault("meta", {})["sql"] = used_sql
+
+    rows_limit = _env_int("SUMMARIZE_ROWS_LIMIT", 1000)
+    save_json_path = os.path.join(os.path.dirname(__file__), "sql_direct_results.txt")
+    content = summarize_from_rows(
+        rows,
+        stat=parsed.stat_key,
+        unit=cfg.unit,
+        day=parsed.day,
+        bounds=cfg.bounds,
+        subject_id=parsed.subject_id,
+        max_rows=rows_limit,
+        payload=payload,
+        save_json_path=save_json_path,
+    )
     try:
         faithfulness = check_faithfulness(content)
     except Exception:
@@ -146,20 +139,13 @@ def main() -> None:
     default_stats = os.path.join(os.path.dirname(__file__), "..", "conf", "stats.yaml")
     ap.add_argument("--stats-yaml", type=str, default=default_stats)
     ap.add_argument("--max-rows", type=int, default=5000)
-    ap.add_argument(
-        "--direct-from-sql",
-        action="store_true",
-        help="Skip Python feature computation and let the LLM summarize directly from SQL rows.",
-    )
     args = ap.parse_args()
 
     stats_cfg = load_stat_config(os.path.abspath(args.stats_yaml))
-    use_direct = args.direct_from_sql or _env_truthy("SUMMARIZE_FROM_SQL")
     output = answer_question(
         args.question,
         stats_cfg,
         max_rows=args.max_rows,
-        direct_from_sql=use_direct,
     )
     print(output)
 

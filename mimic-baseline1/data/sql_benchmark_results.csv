@@ -1,0 +1,10 @@
+subject_id,day,stat_key,baseline_rows,agent_rows,row_recall,row_precision,missing_rows,extra_rows,status,failures,used_sql,delta_range.min,in_tol_range.min,delta_range.max,in_tol_range.max,delta_central.mean,in_tol_central.mean,delta_central.median,in_tol_central.median,delta_percentiles.p05,in_tol_percentiles.p05,delta_percentiles.p95,in_tol_percentiles.p95,delta_trend.delta_last_first,in_tol_trend.delta_last_first,delta_trend.slope_per_hr,in_tol_trend.slope_per_hr,delta_variability.std,in_tol_variability.std,delta_variability.mad,in_tol_variability.mad,delta_coverage.prop_day,in_tol_coverage.prop_day,delta_coverage.n_obs,in_tol_coverage.n_obs,delta_coverage.hours_w_obs,in_tol_coverage.hours_w_obs,delta_coverage.minutes_w_obs,in_tol_coverage.minutes_w_obs,flags_match_flags.unit_conflicts,flags_match_flags.sparse,flags_match_flags.value_out_of_bounds,flags_match_flags.no_data,flags_match_flags.duplicates
+10011,2126-08-20,heart_rate,27,27,1.0,1.0,0,0,PASS,,"SELECT charttime, valuenum, valueuom, itemid, error 
+FROM chartevents 
+WHERE subject_id = 10011 
+  AND charttime BETWEEN '2126-08-20 00:00:00' AND '2126-08-20 24:00:00' 
+  AND itemid IN (211, 220045) 
+  AND valuenum IS NOT NULL 
+  AND (error IS NULL OR error = 0) 
+ORDER BY charttime ASC 
+LIMIT 5000;",0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,0.0,True,True,True,True,True,True

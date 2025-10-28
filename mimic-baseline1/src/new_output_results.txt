@@ -1,0 +1,152 @@
+o3-mini normal:
+On 2126-08-20, heart_rate was recorded with 28 observations covering 25 hours and 28 minutes, giving a full day's coverage (prop_day = 1.0). The observed values 
+ranged from 51.0 to 74.0, with a central tendency marked by a mean of 59.75 and a median of 57.5, and percentiles at 51.0 (P05) and 70.65 (P95). The trend is 
+reflected by a delta_last_first of 1.0 and a slope_per_hr of -0.5454545454545454, while variability measures include a standard deviation of 6.727475646290261 
+and a median absolute deviation of 6.0. No outliers were detected, and all flags (sparse, value_out_of_bounds, unit_conflicts, duplicates, no_data, approximate) 
+are set to false.
+
+{
+  "stat": "heart_rate",
+  "units": "bpm",
+  "day": "2126-08-20",
+  "range": {
+    "min": 51.0,
+    "max": 74.0
+  },
+  "central": {
+    "mean": 59.75,
+    "median": 57.5
+  },
+  "percentiles": {
+    "p05": 51.0,
+    "p95": 70.65
+  },
+  "trend": {
+    "delta_last_first": 1.0,
+    "slope_per_hr": -0.5454545454545454
+  },
+  "variability": {
+    "std": 6.727475646290261,
+    "mad": 6.0
+  },
+  "coverage": {
+    "n_obs": 28,
+    "hours_w_obs": 25,
+    "minutes_w_obs": 28,
+    "prop_day": 1.0
+  },
+  "outliers": {
+    "n": 0,
+    "timestamps": []
+  },
+  "flags": {
+    "unit_conflicts": false,
+    "sparse": false,
+    "value_out_of_bounds": false,
+    "duplicates": false,
+    "no_data": false,
+    "approximate": false
+  }
+}
+
+o3-mini hybrid:
+On day 2126-08-20, the heart_rate was observed with 28 measurements taken over 25 hours and 28 minutes of observations, representing a full proportional day 
+(prop_day = 1.0). The values ranged from 51.0 to 74.0 with a mean of 59.75 and median of 57.5, and the 5th and 95th percentiles were 51.0 and 70.65 respectively.
+There is a slight downward trend with a delta_last_first of 1.0 and a slope_per_hr of -0.5454545454545454, while variability is moderate (std = 
+6.727475646290261, mad = 6.0), and no outliers were found; the flags confirm there are no unit conflicts, sparsity, duplicate entries, out-of-bounds values, 
+missing data, or approximate values.
+
+{
+  "stat": "heart_rate",
+  "units": "BPM",
+  "day": "2126-08-20",
+  "range": {
+    "min": 51.0,
+    "max": 74.0
+  },
+  "central": {
+    "mean": 59.75,
+    "median": 57.5
+  },
+  "percentiles": {
+    "p05": 51.0,
+    "p95": 70.65
+  },
+  "trend": {
+    "delta_last_first": 1.0,
+    "slope_per_hr": -0.5454545454545454
+  },
+  "variability": {
+    "std": 6.727475646290261,
+    "mad": 6.0
+  },
+  "coverage": {
+    "n_obs": 28,
+    "hours_w_obs": 25,
+    "minutes_w_obs": 28,
+    "prop_day": 1.0
+  },
+  "outliers": {
+    "outliers_n": 0,
+    "outliers_timestamps": []
+  },
+  "flags": {
+    "unit_conflicts": false,
+    "sparse": false,
+    "value_out_of_bounds": false,
+    "duplicates": false,
+    "no_data": false,
+    "approximate": false
+  }
+}
+
+o3-direct:
+On 2126-08-20, 28 valid heart rate observations were recorded with values ranging from 51 to 74 BPM. The average heart rate was 59.75 BPM and the median was 57.5
+BPM, with the 5th and 95th percentiles at 51 BPM and 70.65 BPM respectively. The time-ordered data showed a slight increase of 1 BPM over a 24‐hour span (a slope
+of about 0.04167 BPM per hour) and a moderate dispersion with a standard deviation of 6.73 BPM and a median absolute deviation of 6.0 BPM. Observations were 
+noted in 25 distinct hourly buckets and 28 distinct minute buckets, with no outliers, duplicates, or unit conflicts, and the data is not considered sparse or 
+approximate.
+
+{
+  "stat": "heart_rate",
+  "units": "bpm",
+  "day": "2126-08-20",
+  "range": {
+    "min": 51,
+    "max": 74
+  },
+  "central": {
+    "mean": 59.75,
+    "median": 57.5
+  },
+  "percentiles": {
+    "p05": 51,
+    "p95": 70.65
+  },
+  "trend": {
+    "delta_last_first": 1,
+    "slope_per_hr": 0.04167
+  },
+  "variability": {
+    "std": 6.73,
+    "mad": 6.0
+  },
+  "coverage": {
+    "hours_w_obs": 25,
+    "minutes_w_obs": 28,
+    "prop_day": 1,
+    "n_missing_slots": 0
+  },
+  "outliers": {
+    "n": 0,
+    "timestamps": []
+  },
+  "flags": {
+    "sparse": false,
+    "unit_conflicts": false,
+    "value_out_of_bounds": false,
+    "no_data": false,
+    "duplicates": false,
+    "approximate": false
+  }
+}

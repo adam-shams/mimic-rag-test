@@ -178,5 +178,4 @@ def sql_fetch_day(
     ORDER BY charttime ASC
     LIMIT {max_rows}
     """
-    rows = sql_agent.run_query(sql)
-    return _rows_to_dicts(rows)
+    return _run_sql(sql, max_rows)
