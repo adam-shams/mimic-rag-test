@@ -58,6 +58,35 @@ def _rows_to_dicts(rows: Any) -> List[Dict[str, Any]]:
     return out
 
 
+def _clip_rows_to_window(
+    rows: List[Dict[str, Any]], start_dt: str, end_dt: str
+) -> List[Dict[str, Any]]:
+    try:
+        start = datetime.fromisoformat(start_dt)
+        end = datetime.fromisoformat(end_dt)
+    except Exception:
+        return rows
+    clipped: List[Dict[str, Any]] = []
+    for row in rows:
+        ct = row.get("charttime")
+        ct_dt: Optional[datetime] = None
+        if isinstance(ct, datetime):
+            ct_dt = ct
+        elif isinstance(ct, str):
+            try:
+                ct_dt = datetime.fromisoformat(ct)
+            except Exception:
+                ct_dt = None
+        if ct_dt is None:
+            clipped.append(row)
+            continue
+        if start <= ct_dt < end:
+            new_row = dict(row)
+            new_row["charttime"] = ct_dt
+            clipped.append(new_row)
+    return clipped
+
+
 def _extract_sql(text: Optional[str]) -> str:
     """Extract SQL statement from agent response text."""
     if not text:
@@ -137,7 +166,8 @@ def nl_fetch_day(
     """
     nl = f"""
     Fetch {stat_name} rows from chartevents for subject_id={subject_id}
-    between '{start_dt}' and '{end_dt}' inclusive.
+    between '{start_dt}' (inclusive) and '{end_dt}' (exclusive).
+    Ensure the WHERE clause uses charttime >= '{start_dt}' AND charttime < '{end_dt}'.
     Use itemid IN ({", ".join(map(str, itemids))}).
     Return columns [charttime, valuenum, valueuom, itemid, error],
     WHERE valuenum IS NOT NULL AND (error IS NULL OR error=0),
@@ -151,6 +181,7 @@ def nl_fetch_day(
         raise RuntimeError("SQL agent did not produce a query")
     try:
         rows = _run_sql(used_sql, max_rows)
+        rows = _clip_rows_to_window(rows, start_dt, end_dt)
     finally:
         sql_agent.clear_history()
     return rows, used_sql

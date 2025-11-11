@@ -5,13 +5,14 @@ import os
 import re
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 from .config import load_stat_config
 from .features import StatCfg, compute_daily_features
 from .sql_agent import nl_fetch_day
-from .summarize_langroid import summarize_from_rows
+from .summarize_langroid import summarize
 from .eval_faithfulness import check_faithfulness
+from .guideline_rag import interpret_with_guidelines
 
 
 DATE_RE = re.compile(r"\b\d{4}-\d{2}-\d{2}\b")
@@ -74,20 +75,12 @@ def interpret_question(question: str, stats: Dict[str, Any]) -> QuestionRequest:
     return QuestionRequest(subject_id=subject_id, day=day, stat_key=stat_key)
 
 
-def _env_int(name: str, default: int) -> int:
-    val = os.getenv(name)
-    if val is None or not val.strip():
-        return default
-    try:
-        return int(val.strip())
-    except ValueError:
-        return default
-
-
 def answer_question(
     question: str,
     stats_cfg: Dict[str, Any],
     max_rows: int = 5000,
+    rag_dir: Optional[str] = None,
+    enable_rag: bool = True,
 ) -> str:
     parsed = interpret_question(question, stats_cfg)
     stat_def = stats_cfg[parsed.stat_key]
@@ -105,19 +98,7 @@ def answer_question(
     payload = compute_daily_features(rows, cfg, parsed.day)
     payload.setdefault("meta", {})["sql"] = used_sql
 
-    rows_limit = _env_int("SUMMARIZE_ROWS_LIMIT", 1000)
-    save_json_path = os.path.join(os.path.dirname(__file__), "sql_direct_results.txt")
-    content = summarize_from_rows(
-        rows,
-        stat=parsed.stat_key,
-        unit=cfg.unit,
-        day=parsed.day,
-        bounds=cfg.bounds,
-        subject_id=parsed.subject_id,
-        max_rows=rows_limit,
-        payload=payload,
-        save_json_path=save_json_path,
-    )
+    content = summarize(payload)
     try:
         faithfulness = check_faithfulness(content)
     except Exception:
@@ -130,6 +111,21 @@ def answer_question(
         output_lines.append("\nFaithfulness check failed.")
     if used_sql:
         output_lines.append("\nSQL used:\n" + used_sql)
+
+    if enable_rag:
+        print("\n[Guideline RAG] Querying guideline documents... (this may take ~30s)", flush=True)
+        try:
+            rag_result = interpret_with_guidelines(
+                content,
+                payload,
+                rag_dir=rag_dir,
+                subject_id=parsed.subject_id,
+                stat=parsed.stat_key,
+                question=question,
+            )
+        except Exception as exc:
+            rag_result = f"Guideline RAG failed: {exc}"
+        output_lines.append("\n--- Guideline interpretation (RAG) ---\n" + rag_result)
     return "\n".join(output_lines)
 
 
@@ -139,6 +135,17 @@ def main() -> None:
     default_stats = os.path.join(os.path.dirname(__file__), "..", "conf", "stats.yaml")
     ap.add_argument("--stats-yaml", type=str, default=default_stats)
     ap.add_argument("--max-rows", type=int, default=5000)
+    ap.add_argument(
+        "--rag-dir",
+        type=str,
+        default=None,
+        help="Directory containing guideline documents (default: repo-level 'RAG files').",
+    )
+    ap.add_argument(
+        "--no-rag",
+        action="store_true",
+        help="Skip guideline RAG interpretation.",
+    )
     args = ap.parse_args()
 
     stats_cfg = load_stat_config(os.path.abspath(args.stats_yaml))
@@ -146,6 +153,8 @@ def main() -> None:
         args.question,
         stats_cfg,
         max_rows=args.max_rows,
+        rag_dir=args.rag_dir,
+        enable_rag=not args.no_rag,
     )
     print(output)
 

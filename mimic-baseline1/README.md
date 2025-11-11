@@ -26,6 +26,13 @@ Run (natural language question)
 - The CLI always runs in **hybrid mode**: it shows the canonical Python summary and JSON, plus an LLM-computed JSON for comparison, along with a diff report.
 - You can cap the number of rows sent to the LLM with `SUMMARIZE_ROWS_LIMIT` (default 1000).
 
+Guideline RAG (clinical context)
+- Drop PDF/TXT guideline material in the repo-level `RAG files/` folder (already present).
+- Install the extra deps in `requirements.txt` (notably `chromadb` and `pypdf`) and export `OPENAI_API_KEY` (reused for embeddings + answers).
+- Both `run_example.py` and `run_question.py` will automatically append a **Guideline interpretation (RAG)** block when docs and an API key are available.
+- Override the doc folder with `--rag-dir /path/to/docs` or disable the step with `--no-rag`. You can also set `GUIDELINE_RAG_DIR` to change the default.
+- Retrieved answers cite the source file name (`[source: …]`) so you can trace back to the supporting document.
+
 Benchmark the SQL agent
 - Define a list of benchmark cases in `conf/sql_benchmark_cases.yaml` (subject_id, day, stat_key).
 - Run `python -m mimic-baseline1.src.benchmark_sql --cases mimic-baseline1/conf/sql_benchmark_cases.yaml`.

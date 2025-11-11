@@ -5,3 +5,5 @@ PyYAML
 psycopg2-binary
 python-dateutil
 python-dotenv
+chromadb
+pypdf
