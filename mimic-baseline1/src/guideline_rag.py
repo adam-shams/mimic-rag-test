@@ -16,6 +16,7 @@ from langroid.utils.output.citations import (
 from langroid.vector_store.chromadb import ChromaDBConfig
 
 from .config import get_llm_config
+from dataclasses import dataclass
 
 SUPPORTED_SUFFIXES = {".pdf", ".txt", ".md"}
 DEFAULT_DOC_DIR = Path(__file__).resolve().parents[2] / "RAG files"
@@ -57,7 +58,13 @@ def _condensed_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
     return {k: payload.get(k) for k in keys if k in payload}
 
 
-def interpret_with_guidelines(
+@dataclass
+class GuidelineRAGResult:
+    text: str
+    agent: Optional[DocChatAgent]
+
+
+def _run_guideline_rag(
     summary: str,
     payload: Dict[str, Any],
     *,
@@ -67,11 +74,14 @@ def interpret_with_guidelines(
     question: Optional[str] = None,
     max_points: int = 3,
     storage_dir: Optional[str | Path] = None,
-) -> str:
+) -> GuidelineRAGResult:
     doc_dir = Path(rag_dir or os.getenv("GUIDELINE_RAG_DIR", DEFAULT_DOC_DIR))
     docs = _doc_paths(doc_dir)
     if not docs:
-        return f"Guideline RAG skipped: no PDF/TXT/MD files found in '{doc_dir}'."
+        return GuidelineRAGResult(
+            text=f"Guideline RAG skipped: no PDF/TXT/MD files found in '{doc_dir}'.",
+            agent=None,
+        )
 
     storage_root = Path(storage_dir or DEFAULT_STORAGE_DIR).expanduser().resolve()
     storage_root.mkdir(parents=True, exist_ok=True)
@@ -166,14 +176,14 @@ Task:
     try:
         query, extracts = agent.get_relevant_extracts(prompt)
     except Exception as exc:
-        return f"Guideline RAG failed during retrieval: {exc}"
+        return GuidelineRAGResult(text=f"Guideline RAG failed during retrieval: {exc}", agent=None)
     if not extracts:
-        return "Guideline RAG could not find relevant passages."
+        return GuidelineRAGResult(text="Guideline RAG could not find relevant passages.", agent=agent)
 
     try:
         response = agent.get_summary_answer(query, extracts)
     except Exception as exc:
-        return f"Guideline RAG failed during summarization: {exc}"
+        return GuidelineRAGResult(text=f"Guideline RAG failed during summarization: {exc}", agent=agent)
 
     final_answer = (response.content or "").strip()
     citations = extract_markdown_references(final_answer)
@@ -188,4 +198,69 @@ Task:
     full_citations_str, _ = format_cited_references(citations, extracts)
     if full_citations_str.strip():
         final_answer = f"{final_answer}\n\n{full_citations_str.strip()}"
-    return final_answer or "Guideline RAG returned an empty answer."
+    final_answer = final_answer or "Guideline RAG returned an empty answer."
+    return GuidelineRAGResult(text=final_answer, agent=agent)
+
+
+def interpret_with_guidelines(
+    summary: str,
+    payload: Dict[str, Any],
+    *,
+    rag_dir: Optional[str | Path] = None,
+    subject_id: Optional[int] = None,
+    stat: Optional[str] = None,
+    question: Optional[str] = None,
+    max_points: int = 3,
+    storage_dir: Optional[str | Path] = None,
+) -> str:
+    return _run_guideline_rag(
+        summary,
+        payload,
+        rag_dir=rag_dir,
+        subject_id=subject_id,
+        stat=stat,
+        question=question,
+        max_points=max_points,
+        storage_dir=storage_dir,
+    ).text
+
+
+def get_guideline_rag_context(
+    summary: str,
+    payload: Dict[str, Any],
+    *,
+    rag_dir: Optional[str | Path] = None,
+    subject_id: Optional[int] = None,
+    stat: Optional[str] = None,
+    question: Optional[str] = None,
+    max_points: int = 3,
+    storage_dir: Optional[str | Path] = None,
+) -> GuidelineRAGResult:
+    return _run_guideline_rag(
+        summary,
+        payload,
+        rag_dir=rag_dir,
+        subject_id=subject_id,
+        stat=stat,
+        question=question,
+        max_points=max_points,
+        storage_dir=storage_dir,
+    )
+
+
+def answer_guideline_question(agent: DocChatAgent, question: str) -> str:
+    try:
+        response = agent.answer_from_docs(question)
+    except Exception as exc:
+        return f"Guideline follow-up failed: {exc}"
+    if response is None:
+        return "Guideline follow-up produced no response."
+    content = (response.content or "").strip()
+    meta = getattr(response, "metadata", None)
+    sources = ""
+    if meta is not None:
+        block = getattr(meta, "source_content", "") or getattr(meta, "source", "")
+        if block.strip():
+            sources = "\n\n" + block.strip()
+    final = (content + sources).strip()
+    return final or "Guideline follow-up returned an empty answer."

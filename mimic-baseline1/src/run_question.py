@@ -12,7 +12,12 @@ from .features import StatCfg, compute_daily_features
 from .sql_agent import nl_fetch_day
 from .summarize_langroid import summarize
 from .eval_faithfulness import check_faithfulness
-from .guideline_rag import interpret_with_guidelines
+from .guideline_rag import (
+    interpret_with_guidelines,
+    get_guideline_rag_context,
+    answer_guideline_question,
+    GuidelineRAGResult,
+)
 
 
 DATE_RE = re.compile(r"\b\d{4}-\d{2}-\d{2}\b")
@@ -81,7 +86,7 @@ def answer_question(
     max_rows: int = 5000,
     rag_dir: Optional[str] = None,
     enable_rag: bool = True,
-) -> str:
+) -> tuple[str, Optional[GuidelineRAGResult]]:
     parsed = interpret_question(question, stats_cfg)
     stat_def = stats_cfg[parsed.stat_key]
     cfg = StatCfg(
@@ -112,10 +117,11 @@ def answer_question(
     if used_sql:
         output_lines.append("\nSQL used:\n" + used_sql)
 
+    rag_context: Optional[GuidelineRAGResult] = None
     if enable_rag:
         print("\n[Guideline RAG] Querying guideline documents... (this may take ~30s)", flush=True)
         try:
-            rag_result = interpret_with_guidelines(
+            rag_context = get_guideline_rag_context(
                 content,
                 payload,
                 rag_dir=rag_dir,
@@ -123,10 +129,11 @@ def answer_question(
                 stat=parsed.stat_key,
                 question=question,
             )
+            rag_result = rag_context.text
         except Exception as exc:
             rag_result = f"Guideline RAG failed: {exc}"
         output_lines.append("\n--- Guideline interpretation (RAG) ---\n" + rag_result)
-    return "\n".join(output_lines)
+    return "\n".join(output_lines), rag_context
 
 
 def main() -> None:
@@ -146,10 +153,15 @@ def main() -> None:
         action="store_true",
         help="Skip guideline RAG interpretation.",
     )
+    ap.add_argument(
+        "--rag-chat",
+        action="store_true",
+        help="After the initial guideline summary, allow follow-up questions against the same guideline documents.",
+    )
     args = ap.parse_args()
 
     stats_cfg = load_stat_config(os.path.abspath(args.stats_yaml))
-    output = answer_question(
+    output, rag_context = answer_question(
         args.question,
         stats_cfg,
         max_rows=args.max_rows,
@@ -157,6 +169,18 @@ def main() -> None:
         enable_rag=not args.no_rag,
     )
     print(output)
+
+    if args.rag_chat and rag_context and rag_context.agent is not None:
+        print("\n[Guideline RAG Chat] Ask follow-up questions (blank to finish).\n")
+        while True:
+            try:
+                follow = input("Guideline question> ").strip()
+            except EOFError:
+                break
+            if not follow:
+                break
+            follow_resp = answer_guideline_question(rag_context.agent, follow)
+            print("\n" + follow_resp + "\n")
 
 
 if __name__ == "__main__":

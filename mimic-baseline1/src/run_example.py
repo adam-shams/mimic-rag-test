@@ -2,13 +2,19 @@ import argparse
 from datetime import datetime, timedelta
 import json
 import os
+from typing import Optional
 
 from .config import load_stat_config
 from .fetch import fetch_day_chartevents
 from .features import compute_daily_features, StatCfg
 from .summarize_langroid import summarize
 from .eval_faithfulness import check_faithfulness
-from .guideline_rag import interpret_with_guidelines
+from .guideline_rag import (
+    interpret_with_guidelines,
+    get_guideline_rag_context,
+    answer_guideline_question,
+    GuidelineRAGResult,
+)
 
 
 def _day_window(day: str) -> tuple[str, str]:
@@ -34,6 +40,11 @@ def main():
         "--no-rag",
         action="store_true",
         help="Skip guideline RAG interpretation even if documents are available.",
+    )
+    ap.add_argument(
+        "--rag-chat",
+        action="store_true",
+        help="After the initial guideline summary, allow follow-up questions against the same guideline documents.",
     )
     args = ap.parse_args()
 
@@ -65,20 +76,34 @@ def main():
     except Exception as e:
         print("\nFaithfulness check failed:", str(e))
 
+    rag_context: Optional[GuidelineRAGResult] = None
     if not args.no_rag:
         print("\n[Guideline RAG] Querying guideline documents... (this may take ~30s)", flush=True)
         try:
-            rag_result = interpret_with_guidelines(
+            rag_context = get_guideline_rag_context(
                 content,
                 payload,
                 rag_dir=args.rag_dir,
                 subject_id=args.subject_id,
                 stat=args.stat_key,
             )
+            rag_result = rag_context.text
         except Exception as exc:
             rag_result = f"Guideline RAG failed: {exc}"
         print("\n--- Guideline interpretation (RAG) ---\n")
         print(rag_result)
+
+        if args.rag_chat and rag_context and rag_context.agent is not None:
+            print("\n[Guideline RAG Chat] Ask follow-up questions (blank to finish).\n")
+            while True:
+                try:
+                    follow = input("Guideline question> ").strip()
+                except EOFError:
+                    break
+                if not follow:
+                    break
+                follow_resp = answer_guideline_question(rag_context.agent, follow)
+                print("\n" + follow_resp + "\n")
 
 
 if __name__ == "__main__":
