@@ -21,6 +21,7 @@ from dataclasses import dataclass
 SUPPORTED_SUFFIXES = {".pdf", ".txt", ".md"}
 DEFAULT_DOC_DIR = Path(__file__).resolve().parents[2] / "RAG files"
 DEFAULT_STORAGE_DIR = Path(__file__).resolve().parents[1] / "data" / "guideline_rag_chroma"
+PATIENT_CONTEXT_FILENAME = "patient_context.txt"
 
 
 def _doc_paths(doc_dir: Path) -> List[Path]:
@@ -58,10 +59,43 @@ def _condensed_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
     return {k: payload.get(k) for k in keys if k in payload}
 
 
+def _resolve_doc_dir(rag_dir: Optional[str | Path]) -> Path:
+    return Path(rag_dir or os.getenv("GUIDELINE_RAG_DIR", DEFAULT_DOC_DIR)).expanduser().resolve()
+
+
+def write_patient_context_file(
+    summary: str,
+    payload: Dict[str, Any],
+    *,
+    rag_dir: Optional[str | Path] = None,
+    subject_id: Optional[int] = None,
+    stat: Optional[str] = None,
+) -> str:
+    doc_dir = _resolve_doc_dir(rag_dir)
+    doc_dir.mkdir(parents=True, exist_ok=True)
+    file_path = doc_dir / PATIENT_CONTEXT_FILENAME
+    condensed = json.dumps(_condensed_payload(payload), indent=2)
+    subject_line = f"Subject ID: {subject_id if subject_id is not None else 'unknown'}"
+    stat_line = f"Stat: {stat or payload.get('stat', 'unknown stat')}"
+    day_line = f"Day: {payload.get('day', 'unknown day')}"
+    text = (
+        "PATIENT CONTEXT\n"
+        f"{subject_line}\n{stat_line}\n{day_line}\n\n"
+        "Daily summary:\n"
+        f"{summary.strip()}\n\n"
+        "Structured metrics (JSON):\n"
+        f"{condensed}\n"
+    )
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write(text)
+    return text
+
+
 @dataclass
 class GuidelineRAGResult:
     text: str
     agent: Optional[DocChatAgent]
+    context_text: str
 
 
 def _run_guideline_rag(
@@ -74,13 +108,15 @@ def _run_guideline_rag(
     question: Optional[str] = None,
     max_points: int = 3,
     storage_dir: Optional[str | Path] = None,
+    patient_context_text: str = "",
 ) -> GuidelineRAGResult:
-    doc_dir = Path(rag_dir or os.getenv("GUIDELINE_RAG_DIR", DEFAULT_DOC_DIR))
+    doc_dir = _resolve_doc_dir(rag_dir)
     docs = _doc_paths(doc_dir)
     if not docs:
         return GuidelineRAGResult(
             text=f"Guideline RAG skipped: no PDF/TXT/MD files found in '{doc_dir}'.",
             agent=None,
+            context_text=patient_context_text,
         )
 
     storage_root = Path(storage_dir or DEFAULT_STORAGE_DIR).expanduser().resolve()
@@ -117,7 +153,9 @@ def _run_guideline_rag(
         retain_context=False,
         system_message=(
             "You are a clinical guideline assistant. Always base your answers on the "
-            "supplied document extracts and cite them with markdown footnotes [^i]. "
+            "supplied document extracts, especially the patient_context.txt file that "
+            "captures the current patient's summary and structured metrics. Cite all "
+            "supporting passages with markdown footnotes [^i]. "
             "If information is insufficient, say so."
         ),
     )
@@ -172,18 +210,20 @@ Task:
 - If guidance does not apply, state that instead of speculating.
 {question_line}
 """.strip()
+    if patient_context_text:
+        prompt = f"{patient_context_text}\n\n{prompt}"
 
     try:
         query, extracts = agent.get_relevant_extracts(prompt)
     except Exception as exc:
-        return GuidelineRAGResult(text=f"Guideline RAG failed during retrieval: {exc}", agent=None)
+        return GuidelineRAGResult(text=f"Guideline RAG failed during retrieval: {exc}", agent=None, context_text=patient_context_text)
     if not extracts:
-        return GuidelineRAGResult(text="Guideline RAG could not find relevant passages.", agent=agent)
+        return GuidelineRAGResult(text="Guideline RAG could not find relevant passages.", agent=agent, context_text=patient_context_text)
 
     try:
         response = agent.get_summary_answer(query, extracts)
     except Exception as exc:
-        return GuidelineRAGResult(text=f"Guideline RAG failed during summarization: {exc}", agent=agent)
+        return GuidelineRAGResult(text=f"Guideline RAG failed during summarization: {exc}", agent=agent, context_text=patient_context_text)
 
     final_answer = (response.content or "").strip()
     citations = extract_markdown_references(final_answer)
@@ -199,7 +239,7 @@ Task:
     if full_citations_str.strip():
         final_answer = f"{final_answer}\n\n{full_citations_str.strip()}"
     final_answer = final_answer or "Guideline RAG returned an empty answer."
-    return GuidelineRAGResult(text=final_answer, agent=agent)
+    return GuidelineRAGResult(text=final_answer, agent=agent, context_text=patient_context_text)
 
 
 def interpret_with_guidelines(
@@ -212,6 +252,7 @@ def interpret_with_guidelines(
     question: Optional[str] = None,
     max_points: int = 3,
     storage_dir: Optional[str | Path] = None,
+    patient_context_text: str = "",
 ) -> str:
     return _run_guideline_rag(
         summary,
@@ -222,6 +263,7 @@ def interpret_with_guidelines(
         question=question,
         max_points=max_points,
         storage_dir=storage_dir,
+        patient_context_text=patient_context_text,
     ).text
 
 
@@ -235,6 +277,7 @@ def get_guideline_rag_context(
     question: Optional[str] = None,
     max_points: int = 3,
     storage_dir: Optional[str | Path] = None,
+    patient_context_text: str = "",
 ) -> GuidelineRAGResult:
     return _run_guideline_rag(
         summary,
@@ -245,12 +288,18 @@ def get_guideline_rag_context(
         question=question,
         max_points=max_points,
         storage_dir=storage_dir,
+        patient_context_text=patient_context_text,
     )
 
 
-def answer_guideline_question(agent: DocChatAgent, question: str) -> str:
+def answer_guideline_question(
+    agent: DocChatAgent, question: str, patient_context_text: str = ""
+) -> str:
+    prompt = question
+    if patient_context_text:
+        prompt = f"{patient_context_text}\n\nQuestion: {question.strip()}"
     try:
-        response = agent.answer_from_docs(question)
+        response = agent.answer_from_docs(prompt)
     except Exception as exc:
         return f"Guideline follow-up failed: {exc}"
     if response is None:

@@ -10,10 +10,9 @@ from .features import compute_daily_features, StatCfg
 from .summarize_langroid import summarize
 from .eval_faithfulness import check_faithfulness
 from .guideline_rag import (
-    interpret_with_guidelines,
     get_guideline_rag_context,
     answer_guideline_question,
-    GuidelineRAGResult,
+    write_patient_context_file,
 )
 
 
@@ -77,7 +76,15 @@ def main():
         print("\nFaithfulness check failed:", str(e))
 
     rag_context: Optional[GuidelineRAGResult] = None
+    patient_context_text = ""
     if not args.no_rag:
+        patient_context_text = write_patient_context_file(
+            content,
+            payload,
+            rag_dir=args.rag_dir,
+            subject_id=args.subject_id,
+            stat=args.stat_key,
+        )
         print("\n[Guideline RAG] Querying guideline documents... (this may take ~30s)", flush=True)
         try:
             rag_context = get_guideline_rag_context(
@@ -86,6 +93,7 @@ def main():
                 rag_dir=args.rag_dir,
                 subject_id=args.subject_id,
                 stat=args.stat_key,
+                patient_context_text=patient_context_text,
             )
             rag_result = rag_context.text
         except Exception as exc:
@@ -93,7 +101,7 @@ def main():
         print("\n--- Guideline interpretation (RAG) ---\n")
         print(rag_result)
 
-        if args.rag_chat and rag_context and rag_context.agent is not None:
+        if rag_context and rag_context.agent is not None:
             print("\n[Guideline RAG Chat] Ask follow-up questions (blank to finish).\n")
             while True:
                 try:
@@ -102,7 +110,11 @@ def main():
                     break
                 if not follow:
                     break
-                follow_resp = answer_guideline_question(rag_context.agent, follow)
+                follow_resp = answer_guideline_question(
+                    rag_context.agent,
+                    follow,
+                    patient_context_text=rag_context.context_text,
+                )
                 print("\n" + follow_resp + "\n")
 
 

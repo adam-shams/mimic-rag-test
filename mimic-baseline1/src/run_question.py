@@ -13,10 +13,10 @@ from .sql_agent import nl_fetch_day
 from .summarize_langroid import summarize
 from .eval_faithfulness import check_faithfulness
 from .guideline_rag import (
-    interpret_with_guidelines,
     get_guideline_rag_context,
     answer_guideline_question,
     GuidelineRAGResult,
+    write_patient_context_file,
 )
 
 
@@ -118,7 +118,15 @@ def answer_question(
         output_lines.append("\nSQL used:\n" + used_sql)
 
     rag_context: Optional[GuidelineRAGResult] = None
+    patient_context_text = ""
     if enable_rag:
+        patient_context_text = write_patient_context_file(
+            content,
+            payload,
+            rag_dir=rag_dir,
+            subject_id=parsed.subject_id,
+            stat=parsed.stat_key,
+        )
         print("\n[Guideline RAG] Querying guideline documents... (this may take ~30s)", flush=True)
         try:
             rag_context = get_guideline_rag_context(
@@ -128,6 +136,7 @@ def answer_question(
                 subject_id=parsed.subject_id,
                 stat=parsed.stat_key,
                 question=question,
+                patient_context_text=patient_context_text,
             )
             rag_result = rag_context.text
         except Exception as exc:
@@ -170,7 +179,7 @@ def main() -> None:
     )
     print(output)
 
-    if args.rag_chat and rag_context and rag_context.agent is not None:
+    if rag_context and rag_context.agent is not None:
         print("\n[Guideline RAG Chat] Ask follow-up questions (blank to finish).\n")
         while True:
             try:
@@ -179,7 +188,11 @@ def main() -> None:
                 break
             if not follow:
                 break
-            follow_resp = answer_guideline_question(rag_context.agent, follow)
+            follow_resp = answer_guideline_question(
+                rag_context.agent,
+                follow,
+                patient_context_text=rag_context.context_text,
+            )
             print("\n" + follow_resp + "\n")
 
 
