@@ -20,9 +20,9 @@ Script
 - Outputs default to data/sql_benchmark_results.csv and sql_direct_results.txt.
 
 Run example
-    python -m mimic-baseline1.src.benchmark_sql \
-        --cases mimic-baseline1/conf/sql_benchmark_cases.yaml \
-        --stats-yaml mimic-baseline1/conf/stats.yaml \
-        --output mimic-baseline1/data/sql_benchmark_results.csv
+    python -m mimic_baseline1.src.benchmark_sql \
+        --cases mimic_baseline1/conf/sql_benchmark_cases.yaml \
+        --stats-yaml mimic_baseline1/conf/stats.yaml \
+        --output mimic_baseline1/data/sql_benchmark_results.csv
 
 Tune with --max-rows or by editing the YAML cases.

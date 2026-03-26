@@ -10,7 +10,7 @@ def main() -> None:
         dsn = get_mimic_dsn()
     except Exception as e:
         print("MIMIC_DSN not configured:", e)
-        print("Hint: set it in mimic-baseline1/conf/db.env or export MIMIC_DSN in your shell.")
+        print("Hint: set it in mimic_baseline1/conf/db.env or export MIMIC_DSN in your shell.")
         return
 
     try:

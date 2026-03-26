@@ -7,10 +7,10 @@ with the deterministic baseline query (`sql_fetch_day`) for a set of
 feature deltas, and flag mismatches.
 
 Usage:
-    python -m mimic-baseline1.src.benchmark_sql \
-        --cases mimic-baseline1/conf/sql_benchmark_cases.yaml \
-        --stats-yaml mimic-baseline1/conf/stats.yaml \
-        --output mimic-baseline1/data/sql_benchmark_results.csv
+    python -m mimic_baseline1.src.benchmark_sql \
+        --cases mimic_baseline1/conf/sql_benchmark_cases.yaml \
+        --stats-yaml mimic_baseline1/conf/stats.yaml \
+        --output mimic_baseline1/data/sql_benchmark_results.csv
 """
 
 from __future__ import annotations

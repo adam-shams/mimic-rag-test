@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "mimic": {
+      "command": "python",
+      "args": ["-m", "mimic_baseline1.src.mcp_server"],
+      "cwd": "/Users/adam/Documents/Mimic Rag Test/.claude/worktrees/eager-zhukovsky"
+    }
+  }
+}
