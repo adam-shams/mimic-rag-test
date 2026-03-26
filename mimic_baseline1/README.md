@@ -35,7 +35,11 @@ Guideline RAG (clinical context)
 - Retrieved answers cite the source file name (`[source: …]`) so you can trace back to the supporting document.
 
 MCP Server
-- Start: `python -m mimic_baseline1.src.mcp_server` (port 8080 via `.claude/launch.json`)
+- Register with Claude Code (run once from the repo root):
+  ```
+  claude mcp add mimic -- python -m mimic_baseline1.src.mcp_server
+  ```
+- Or start manually: `python -m mimic_baseline1.src.mcp_server`
 - Exposes 5 tools Claude can call directly:
 
   | Tool | Description |

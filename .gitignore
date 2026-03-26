@@ -27,6 +27,9 @@ logs/
 # Secrets and local config
 .env
 
+# Claude Code local config (contains machine-specific paths)
+.claude/
+
 # Optional large datasets (uncomment to ignore)
 # mimic-iii-clinical-database-demo-1.4/
 
