@@ -7,3 +7,4 @@ python-dateutil
 python-dotenv
 chromadb
 pypdf
+mcp

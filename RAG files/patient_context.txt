@@ -1,0 +1,57 @@
+PATIENT CONTEXT
+Subject ID: 42430
+Stat: heart_rate
+Day: 2142-11-29
+
+Daily summary:
+heart_rate ranged 84.0–93.0 bpm. Median 88.0 bpm; 18 readings, coverage 0.71. Trend 0.0 bpm/hr; Δ 5.0. Outliers: 0.
+
+{"stat": "heart_rate", "units": "bpm", "day": "2142-11-29", "range": {"min": 84.0, "max": 93.0, "t_min": "2142-11-29T06:00:00", "t_max": "2142-11-29T16:00:00"}, "central": {"mean": 87.83333333333333, "median": 88.0}, "percentiles": {"p05": 84.85, "p95": 92.15}, "trend": {"slope_per_hr": 0.0, "delta_last_first": 5.0}, "variability": {"std": 2.362907813126304, "mad": 2.0}, "coverage": {"n_obs": 18, "prop_day": 0.7083333333333334, "hours_w_obs": 17, "minutes_w_obs": 18, "n_missing_slots": 7}, "outliers": {"n": 0, "timestamps": []}, "flags": {"unit_conflicts": false, "sparse": false, "value_out_of_bounds": false, "no_data": false, "duplicates": false, "approximate": false}}
+
+Structured metrics (JSON):
+{
+  "stat": "heart_rate",
+  "units": "bpm",
+  "day": "2142-11-29",
+  "range": {
+    "min": 84.0,
+    "max": 93.0,
+    "t_min": "2142-11-29T06:00:00",
+    "t_max": "2142-11-29T16:00:00"
+  },
+  "central": {
+    "mean": 87.83333333333333,
+    "median": 88.0
+  },
+  "percentiles": {
+    "p05": 84.85,
+    "p95": 92.15
+  },
+  "trend": {
+    "slope_per_hr": 0.0,
+    "delta_last_first": 5.0
+  },
+  "variability": {
+    "std": 2.362907813126304,
+    "mad": 2.0
+  },
+  "coverage": {
+    "n_obs": 18,
+    "prop_day": 0.7083333333333334,
+    "hours_w_obs": 17,
+    "minutes_w_obs": 18,
+    "n_missing_slots": 7
+  },
+  "outliers": {
+    "n": 0,
+    "timestamps": []
+  },
+  "flags": {
+    "unit_conflicts": false,
+    "sparse": false,
+    "value_out_of_bounds": false,
+    "no_data": false,
+    "duplicates": false,
+    "approximate": false
+  }
+}

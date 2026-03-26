@@ -146,7 +146,7 @@ def summarize(stat_payload: Dict[str, Any]) -> str:
                 ),
             )
             agent = lr.ChatAgent(SUM_CFG)
-            task = lr.Task(agent, name="SummarizeOneDay")
+            task = lr.Task(agent, name="SummarizeOneDay", interactive=False)
 
             payload_block = _payload_block(sp)
             head_csv = sp.get("head_rows_csv", "") or "<no rows>"
@@ -322,7 +322,7 @@ def _run_llm_task(system_message: str, user_message: str, agent_name: str, task_
             system_message=system_message,
         )
         agent = lr.ChatAgent(cfg)
-        task = lr.Task(agent, name=task_name)
+        task = lr.Task(agent, name=task_name, interactive=False)
         return task.run(user_message).content
     except Exception:
         return None
